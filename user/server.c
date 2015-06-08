@@ -294,7 +294,7 @@ void SRVR_ServerRecvApModeCb(void *arg, char *data, unsigned short len)
 	{
 		postInProgressFlag = FALSE;
 
-		os_sprintf(htmlString, HTML_pageIndex, macaddr[0], macaddr[1], macaddr[2]
+		os_sprintf(htmlString, HTML_pageIndex, HTML_logo, macaddr[0], macaddr[1], macaddr[2]
 								,macaddr[3], macaddr[4], macaddr[5]);
 		espconn_sent(conn, &htmlString[0], strlen(htmlString));
 	}

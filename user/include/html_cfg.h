@@ -12,6 +12,9 @@
 
 #include "c_types.h"
 
+extern const uint8_t HTML_logo[];
+const uint16_t HTML_logoSize;
+
 extern const uint8_t HTML_pageIndex[];
 extern const uint16_t HTML_pageIndexSize;
 
