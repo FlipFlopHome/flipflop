@@ -18,7 +18,7 @@ static esp_tcp serverStationModeTcp;
 
 static uint8_t macaddr[6];
 static bool moduleWiFiCfgDoneFlag;
-static uint8_t htmlString[1000];
+static uint8_t htmlString[10000];
 uint8_t ssidData[32];
 uint8_t pwdData[64];
 
