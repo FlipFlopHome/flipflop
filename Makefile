@@ -16,6 +16,7 @@
 # relative to the project directory
 BUILD_BASE	= build
 FW_BASE		= firmware
+FW_BIN		= bin_v1.1.0
 
 VERBOSE = 1
 
@@ -60,10 +61,14 @@ SDK_INCDIR	= include include/json
 FW_FILE_1_ADDR	= 0x00000
 FW_FILE_2_ADDR	= 0x40000
 
+FW_FILE_3_ADDR	= 0x7C000
+FW_FILE_4_ADDR	= 0x7E000
+
 # select which tools to use as compiler, librarian and linker
 CC		:= $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-gcc
 AR		:= $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-ar
 LD		:= $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-gcc
+SIZE	:= $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-size -A
 
 
 
@@ -91,6 +96,9 @@ MODULE_INCDIR	:= $(addsuffix /include,$(INCDIR))
 FW_FILE_1	:= $(addprefix $(FW_BASE)/,$(FW_FILE_1_ADDR).bin)
 FW_FILE_2	:= $(addprefix $(FW_BASE)/,$(FW_FILE_2_ADDR).bin)
 
+FW_FILE_3	:= $(addprefix $(FW_BIN)/,esp_init_data_default.bin)
+FW_FILE_4	:= $(addprefix $(FW_BIN)/,blank.bin)
+
 V ?= $(VERBOSE)
 ifeq ("$(V)","1")
 Q :=
@@ -108,13 +116,14 @@ $1/%.o: %.c
 	$(Q) $(CC) $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CFLAGS) -c $$< -o $$@
 endef
 
-.PHONY: all checkdirs flash clean
+.PHONY: all checkdirs flash clean flash_all
 
 all: checkdirs $(TARGET_OUT) $(FW_FILE_1) $(FW_FILE_2)
 
 $(FW_BASE)/%.bin: $(TARGET_OUT) | $(FW_BASE)
 	$(vecho) "FW $(FW_BASE)/"
 	$(Q) $(ESPTOOL) elf2image -o $(FW_BASE)/ $(TARGET_OUT)
+	$(Q) $(SIZE) $(TARGET_OUT)
 
 $(TARGET_OUT): $(APP_AR)
 	$(vecho) "LD $@"
@@ -123,6 +132,7 @@ $(TARGET_OUT): $(APP_AR)
 $(APP_AR): $(OBJ)
 	$(vecho) "AR $@"
 	$(Q) $(AR) cru $@ $^
+	
 
 checkdirs: $(BUILD_DIR) $(FW_BASE)
 
@@ -135,6 +145,11 @@ $(FW_BASE):
 flash: $(FW_FILE_1) $(FW_FILE_2)
 	$(ESPTOOL) --port $(ESPPORT) write_flash $(FW_FILE_1_ADDR) $(FW_FILE_1) $(FW_FILE_2_ADDR) $(FW_FILE_2)
 
+flash_all: $(FW_FILE_1) $(FW_FILE_2) $(FW_FILE_3) $(FW_FILE_4)
+	$(ESPTOOL) --port $(ESPPORT) write_flash $(FW_FILE_1_ADDR) $(FW_FILE_1) $(FW_FILE_2_ADDR) $(FW_FILE_2) $(FW_FILE_3_ADDR) $(FW_FILE_3) $(FW_FILE_4_ADDR) $(FW_FILE_4)
+	
+	
+	
 clean:
 	$(Q) rm -rf $(FW_BASE) $(BUILD_BASE)
 
