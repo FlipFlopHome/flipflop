@@ -9,7 +9,7 @@
 
 
 // TODO: rework pages to share logo string?
-const uint8_t HTML_logo[] = ""\
+char HTML_logo[] = ""\
 "<img style=\"vertical-align: text-bottom; padding-right: 5px;\" src=\"data:image/png;base64," \
 "iVBORw0KGgoAAAANSUhEUgAAACgAAAAoEAYAAADcbmQuAAAPeklEQVRo3sVae3zNV7Y/jxyJV5CX0JCQBEmQiERe+5ffSfYDze" \
 "uc/VM1JnS0DFOlM8Wnd8y4Y7TVqzq0qvReo2lHr6EGNRcd8arHFNXWq16hKoxH0ogoQoKcWef07N8kv+TnnCTMzT/7c3L22Xuv" \
@@ -68,8 +68,8 @@ const uint8_t HTML_logo[] = ""\
 "2z4KRTM/fiDhdPb/kkKcYv7dI5MjBadkXjP83z8Bp/geoL9YovkAAAAASUVORK5CYII=\" />";
 
 const uint16_t HTML_logoSize = sizeof(HTML_logo);
-
-const uint8_t HTML_pageIndex[] = ""\
+#if(0)
+char HTML_pageIndex[] = ""\
 "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nPragma: no-cache\r\n\r\n" \
 "<html>\r\n<body>\r\n" \
 "<div style=\"background-color:black; color:white; padding:20px;\">\r\n" \
@@ -89,8 +89,9 @@ const uint8_t HTML_pageIndex[] = ""\
 "</body>\r\n</html>\r\n";
 
 const uint16_t HTML_pageIndexSize = sizeof(HTML_pageIndex);
+#endif
 
-const uint8_t HTML_pageWiFiConnectionStatus[] = ""\
+char HTML_pageWiFiConnectionStatus[] = ""\
 "HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nPragma: no-cache\r\n\r\n" \
 "<html>\r\n<body>\r\n" \
 "<h1>FlipFlop Light Switch Module<br>Connection Status</h1>\r\n" \
@@ -109,3 +110,199 @@ const uint8_t HTML_pageWiFiConnectionStatus[] = ""\
 "</body>\r\n</html>\r\n";
 
 const uint16_t HTML_pageWiFiConnectionStatusSize = sizeof(HTML_pageWiFiConnectionStatus);
+
+char HTML_pageError[] = ""\
+"HTTP/1.0 408 Request Time-out\r\nContent-Type: text/html\r\nPragma: no-cache\r\n\r\n"
+"<html><body><h1>408 Request Time-out</h1>\r\n" \
+"Your browser didn't send a complete request in time.\r\n" \
+"</body></html>\r\n";
+
+const uint16_t HTML_pageErrorSize = sizeof(HTML_pageError);
+
+/**************************************************************************/
+/* Main Configuration Page - Main Template                                */
+/**************************************************************************/
+char HTML_pageIndex[] = ""\
+"HTTP/1.0 200 OK\r\nContent-Type: text/html\r\nPragma: no-cache\r\n\r\n" \
+"<html>" \
+"<head>" \
+"<style>\r\n" \
+"#header {" \
+    "background-color:black;" \
+    "color:white;" \
+    "text-align:center;" \
+    "padding:5px;" \
+"}\r\n" \
+"#nav {" \
+    "line-height:30px;" \
+    "background-color:#eeeeee;" \
+    "height:1000px;" \
+    "width:150px;" \
+    "float:left;" \
+    "padding:5px;" \
+"}\r\n" \
+"#section {" \
+    "width:500px;" \
+    "float:left;" \
+    "padding:10px;" \
+"}\r\n" \
+"#footer {" \
+    "background-color:black;" \
+    "color:white;" \
+    "clear:both;" \
+    "text-align:center;" \
+   "padding:5px;" \
+"}\r\n" \
+"</style>" \
+"</head>" \
+"<body>\r\n" \
+"<div id=\"header\">\r\n" \
+/* Logo Img */
+"<h1>%s<b>FlipFlop Light Switch Module</b></h1>\r\n" \
+"</div>\r\n" \
+"<div id=\"nav\">" \
+"<a href=\"/home\">Home<br></a>\r\n" \
+"<a href=\"/module_setup\">Module Setup<br></a>\r\n" \
+"<a href=\"/module_info\">Module Info</a><br>\r\n" \
+"<a href=\"/restart\">Restart Module</a>\r\n" \
+"</div>\r\n" \
+/* Section Content */
+"%s" \
+"</div>\r\n" \
+"<div id=\"footer\">" \
+"Copyright © flip-flop.io" \
+"</div>\r\n" \
+"</body>" \
+"</html>";
+
+const uint16_t HTML_pageIndexSize = sizeof(HTML_pageIndex);
+
+/**************************************************************************/
+/* Main Configuration Page "/home                                         */
+/**************************************************************************/
+char HTML_sectionHome[] = ""\
+"<h2>Home</h2>" \
+"<p>Welcome to the FlipFlop Light Switch Module.</p>\r\n" \
+"<p>Select the option on the left tab menu to configure the Module." \
+"The Module can be configured as an Access Point (AP) or as a Station connected to your home router.</p>\r\n";
+
+const uint16_t HTML_sectionHomeSize = sizeof(HTML_sectionHome);
+
+/**************************************************************************/
+/* Main Configuration Page "/module_setup                                     */
+/**************************************************************************/
+
+char HTML_sectionModuleSetup[] = ""\
+"<h2>Module Setup</h2>" \
+ "<p>Welcome to the FlipFlop Light Switch Module.</p>\r\n" \
+ "<p>This page is used to configure the Module.</p>\r\n" \
+"<hr>" \
+"<h3>Module Operating Mode</h3>" \
+ "<p>Select the Mode to be an Access Point (AP) or a Station</p>\r\n" \
+ "<form action=\"wifi_info\" method=\"POST\">\r\n" \
+   "<br>"
+   "<label for=\"ap_mode_select\">AP Mode</label>\r\n" \
+   "<input type=\"radio\" name=\"mode\" id=\"ap_mode\" value=\"ap_mode\" %s >\r\n" \
+   "<br>"
+   "<label for=\"station_mode_select\">Station Mode</label>\r\n"
+   "<input type=\"radio\" name=\"mode\" id=\"station_mode\" value=\"station_mode\" %s >\r\n" \
+   "<br>"\
+"<hr>\r\n" \
+"<h3>AP Mode</h3>" \
+   "<p>IP address when in AP mode</p>\r\n" \
+   "IP ADDRESS: %d.%d.%d.%d" \
+"<hr>\r\n" \
+"<h3>Station Mode</h3>" \
+   "SSID:<br>\r\n" \
+   "<input type=\"text\" name=\"ssid\" value=\"\">\r\n" \
+   "<br>\r\n" \
+   "Password:<br>\r\n" \
+   "<input type=\"text\" name=\"pwd\" value=\"\">\r\n" \
+   "<br><br>\r\n" \
+"<hr>\r\n" \
+"<input type=\"submit\" value=\"Submit\" style=\"float: right;\">\r\n" \
+"</form>";
+
+
+const uint16_t HTML_sectionModuleSetupSize = sizeof(HTML_sectionModuleSetup);
+
+/**************************************************************************/
+/* Main Configuration Page "/station_setup                                */
+/**************************************************************************/
+
+char HTML_sectionStationSetup[] = ""\
+"<h2>Station Setup</h2>" \
+"<form action=\"wifi_info\" method=\"POST\">\r\n" \
+"SSID:<br>\r\n" \
+"<input type=\"text\" name=\"ssid\" value=\"\">\r\n" \
+"<br>\r\n" \
+"Password:<br>\r\n" \
+"<input type=\"text\" name=\"pwd\" value=\"\">\r\n" \
+"<br><br>\r\n" \
+"<input type=\"submit\" value=\"Submit\">\r\n" \
+"</form>\r\n";
+
+const uint16_t HTML_sectionStationSetupSize = sizeof(HTML_sectionStationSetup);
+
+/**************************************************************************/
+/* Main Configuration Page "/module_info                                  */
+/**************************************************************************/
+
+char HTML_sectionModuleInfo[] = ""\
+"<h2>Module Information</h2>" \
+"<p>The Module MAC Address: %02X-%02X-%02X-%02X-%02X-%02X </p>\r\n" \
+"<p>Module Mode: %s" \
+"<br>\r\n" \
+"SSID: %s" \
+"<br>\r\n" \
+"Connection Status - %s" \
+"<br>\r\n" \
+"IP ADDRESS: %d.%d.%d.%d" \
+"<br>\r\n" \
+"SDK Version: %s" \
+"<br>\r\n" \
+"Flash Type: 0x%x" \
+"<br>\r\n" \
+"</p>\r\n";
+
+const uint16_t HTML_sectionModuleInfoSize = sizeof(HTML_sectionModuleInfo);
+
+/**************************************************************************/
+/* Main Configuration Page "/ap_setup                                     */
+/**************************************************************************/
+
+char HTML_sectionRestart[] = ""\
+"<h2>Restart Module</h2>" \
+"<p>Please restart the module for the new configuration to take effect</p>\r\n" \
+"<p>To restart press the Restart button below.</p>\r\n" \
+"<br><br>\r\n" \
+"<form action=\"restart\" method=\"POST\">\r\n" \
+"<input type=\"submit\" name=\"apply\" class=\"button\" value=\"Apply Changes\"><br><br>\r\n" \
+"</form>\r\n";
+
+const uint16_t HTML_sectionRestartSize = sizeof(HTML_sectionRestart);
+
+/**************************************************************************/
+/* Main Configuration Page "/ap_mode_status                               */
+/**************************************************************************/
+
+char HTML_sectionApModeStatus[] = ""\
+"<h2>AP Mode Configuration Status</h2>" \
+"<p>The connection configuration in AP Mode %s</p>\r\n" \
+"<p>You can now Restart the Module.</p>\r\n";
+
+const uint16_t HTML_sectionApModeStatusSize = sizeof(HTML_sectionApModeStatus);
+
+char HTML_sectionStationModeStatus[] = ""\
+"<h2>Station Mode Configuration Status</h2>" \
+"<p>Please restart the module for the new configuration to take effect</p>\r\n" \
+"<br>" \
+"<p>SSID: %s" \
+"<br>\r\n" \
+"Password: %s" \
+"<br>\r\n" \
+"Connection Status - %s" \
+"<br>\r\n" \
+"IP ADDRESS: %d.%d.%d.%d";
+
+const uint16_t HTML_sectionStationModeStatusSize = sizeof(HTML_sectionStationModeStatus);

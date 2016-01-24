@@ -1,2 +1,8 @@
 # Ignore temporary files
 tmp
+bin_*
+build
+firmware
+flipflop.wiki
+tools
+

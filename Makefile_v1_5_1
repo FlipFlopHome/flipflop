@@ -16,7 +16,7 @@
 # relative to the project directory
 BUILD_BASE	= build
 FW_BASE		= firmware
-FW_BIN		= bin_v1.4.0
+FW_BIN		= bin_v1.5.1
 
 VERBOSE = 1
 
@@ -24,7 +24,7 @@ VERBOSE = 1
 XTENSA_TOOLS_ROOT ?= /opt/ESPTools/esp-open-sdk/xtensa-lx106-elf/bin
 
 # base directory of the ESP8266 SDK package, absolute
-SDK_BASE	?= /opt/ESPTools/ESP8266_SDK/esp_iot_sdk_v1.4.0
+SDK_BASE	?= /opt/ESPTools/ESP8266_SDK/esp_iot_sdk_v1.5.1
 
 # esptool.py path and port
 ESPTOOL		?= esptool.py
@@ -41,7 +41,8 @@ MODULES		= driver user
 EXTRA_INCDIR    = include
 
 # libraries used in this project, mainly provided by the SDK
-LIBS		= c gcc hal pp phy net80211 lwip wpa main pwm
+# LIBS = c gcc hal pp phy net80211 lwip wpa main pwm
+LIBS = c gcc hal phy pp net80211 lwip wpa pwm upgrade main ssl crypto
 
 # compiler flags using during compilation of source files
 CFLAGS		= -Os -g -O2 -Wpointer-arith -Wundef -Werror -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals  -D__ets__ -DICACHE_FLASH
@@ -121,7 +122,7 @@ endef
 
 all: checkdirs $(TARGET_OUT) $(FW_FILE_1) $(FW_FILE_2)
 
-$(FW_BASE)/%.bin: $(TARGET_OUT) | $(app)
+$(FW_BASE)/%.bin: $(TARGET_OUT) | $(FW_BASE)
 	$(vecho) "FW $(FW_BASE)/"
 	$(Q) $(ESPTOOL) elf2image -o $(FW_BASE)/ $(TARGET_OUT)
 	$(Q) $(SIZE) $(TARGET_OUT)

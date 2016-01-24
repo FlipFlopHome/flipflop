@@ -24,26 +24,32 @@
 #define STATION_PASSWORD "I have a porsche 914"
 
 #define AP_MODE_PORT_NUMBER				(80)
-#define STATION_MODE_PORT_NUMBER		(8899)
+#define STATION_MODE_PORT_NUMBER		(80)
 
 
 
-#define SERVER_AP_MODE_TIMEOUT				60 /* Time out in seconds - AP Mode */
-#define SERVER_STATION_MODE_TIMEOUT			7200 /* Time out in seconds - STATION Mode */
+#define SERVER_AP_MODE_TIMEOUT				5000 /* Time out in seconds - AP Mode */
+#define SERVER_STATION_MODE_TIMEOUT			5000 /* Time out in seconds - STATION Mode */
 
 
 void SRVR_ConfigApMode(void);
 void SRVR_ConfigStationModeCheckStatus(void *arg);
 uint8_t SRVR_ConfigStationMode(uint8_t *ssid, uint16_t ssidSize, uint8_t *password, uint16_t passwordSize);
 
-void SRVR_ServerApModeInit(int port);
-void SRVR_ServerStationModeInit(int port);
+void SRVR_ServerApModeInit(int port, espconn_connect_callback callbackFunction);
+void SRVR_ServerStationModeInit(int port, espconn_connect_callback callbackFunction);
 
 void SRVR_ServerConnectApModeCb(void *arg);
 void SRVR_ServerDisconApModeCb(void *arg);
 void SRVR_ServerReconApModeCb(void *arg, sint8 err);
 void SRVR_ServerRecvApModeCb(void *arg, char *data, unsigned short len);
 void SRVR_ServerSentApModeCb(void *arg);
+
+void SRVR_ServerConnectNormalModeCb(void *arg);
+void SRVR_ServerDisconNormalModeCb(void *arg);
+void SRVR_ServerReconNormalModeCb(void *arg, sint8 err);
+void SRVR_ServerRecvNormalModeCb(void *arg, char *data, unsigned short len);
+void SRVR_ServerSentNormalModeCb(void *arg);
 
 void SRVR_ServerConnectStationModeCb(void *arg);
 void SRVR_ServerDisconStationModeCb(void *arg);

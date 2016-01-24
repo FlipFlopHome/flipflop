@@ -12,15 +12,26 @@
 
 #include "c_types.h"
 
-extern const uint8_t HTML_logo[];
+extern char HTML_logo[];
 const uint16_t HTML_logoSize;
 
-extern const uint8_t HTML_pageIndex[];
+extern char HTML_pageIndex[];
 extern const uint16_t HTML_pageIndexSize;
 
-extern const uint8_t HTML_pageWiFiConnectionStatus[];
+extern char HTML_pageWiFiConnectionStatus[];
 
 extern const uint16_t HTML_pageWiFiConnectionStatusSize;
+
+extern char HTML_pageError[];
+
+extern char HTML_sectionHome[];
+
+extern char HTML_sectionModuleSetup[];
+extern char HTML_sectionStationSetup[];
+extern char HTML_sectionModuleInfo[];
+extern char HTML_sectionRestart[];
+extern char HTML_sectionApModeStatus[];
+extern char HTML_sectionStationModeStatus[];
 
 
 #endif /* USER_INCLUDE_HTML_CFG_H_ */
