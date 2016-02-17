@@ -20,8 +20,8 @@
 #define AP_SSID		"FlipFlop"
 #define MODULE_TYPE "_100_"		/* On/Off Switch Module */
 #define AP_PASSWORD	"12345"
-#define STATION_SSID	"Melrose"
-#define STATION_PASSWORD "I have a porsche 914"
+#define STATION_SSID	""
+#define STATION_PASSWORD ""
 
 #define AP_MODE_PORT_NUMBER				(80)
 #define STATION_MODE_PORT_NUMBER		(80)
